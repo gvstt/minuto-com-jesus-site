@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --cream: #f7f4ed;
+  --ink: #24483d;
+  --muted: #40594d;
+  --green: #285e4a;
+  --sage: #e7ece0;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "DM Sans", Arial, sans-serif;
+  line-height: 1.6;
+}
+a { color: inherit; }
+.wrap { width: min(1100px, calc(100% - 48px)); margin-inline: auto; }
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 10; background: white; padding: 12px; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid #aa7b3b; outline-offset: 3px; }
+
+.header { min-height: 90px; display: flex; align-items: center; border-bottom: 1px solid #dce4da; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; font-size: 24px; font-weight: 700; letter-spacing: -.04em; }
+.brand em { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; }
+.brand-mark { color: #b68f55; font-size: 29px; }
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+  grid-template-areas: "copy visual" "offer visual";
+  align-content: center;
+  align-items: center;
+  column-gap: 8%;
+  padding-block: 70px 85px;
+}
+.hero-copy { grid-area: copy; align-self: end; }
+.eyebrow { margin: 0; color: #557465; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
+h1, h2 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; letter-spacing: -.035em; }
+h1 { max-width: 600px; margin: 24px 0 26px; font-size: clamp(58px, 6vw, 82px); line-height: 1.06; }
+h1 em { color: #a77c43; font-weight: 400; }
+.lead { max-width: 540px; margin: 0; color: var(--muted); font-size: 21px; line-height: 1.6; }
+.visual-preview { grid-area: visual; min-width: 0; margin: 0; }
+.visual { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 8px; box-shadow: 14px 16px 0 #e8e9db; }
+.visual-preview figcaption { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 16px; margin-top: 22px; color: var(--muted); font-size: 16px; text-align: center; }
+.visual-preview figcaption a { color: var(--green); font-weight: 700; text-underline-offset: 3px; }
+.offer { grid-area: offer; align-self: start; margin-top: 32px; }
+.price { margin: 0; font-size: 23px; font-weight: 700; }
+.availability { margin: 0 0 23px; color: var(--muted); font-size: 17px; }
+.button { display: inline-flex; align-items: center; gap: 20px; padding: 16px 23px; border-radius: 5px; background: var(--green); color: white; font-size: 18px; font-weight: 700; text-decoration: none; }
+.button:hover, .button:focus-visible { background: #174b38; }
+
+.sample-section { background: var(--sage); padding-block: 85px; }
+.sample-layout { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 9%; }
+.sample-intro h2 { margin: 18px 0; font-size: clamp(40px, 4vw, 56px); line-height: 1.13; }
+.sample-intro > p:last-child { color: var(--muted); font-size: 19px; }
+.sample-card { padding: 40px 46px; border: 1px solid #e1e5d9; border-radius: 5px; background: #fffef9; box-shadow: 0 18px 55px #24483d12; }
+.sample-label { margin: 0 0 27px; color: #51715d; font-size: 14px; font-weight: 700; letter-spacing: .09em; }
+.sample-card p:not(.sample-label) { margin: 0; color: var(--muted); font-size: 20px; line-height: 1.7; }
+.sample-card p + p { margin-top: 24px !important; }
+.sample-card strong { color: var(--ink); }
+.footer { min-height: 95px; display: flex; align-items: center; color: var(--muted); font-size: 15px; }
+
+@media (max-width: 850px) {
+  .hero { grid-template-columns: 1fr; grid-template-areas: "copy" "visual" "offer"; gap: 0; padding-block: 58px 70px; }
+  .hero-copy { align-self: auto; }
+  .visual-preview { width: min(100%, 520px); justify-self: center; margin-top: 38px; }
+  .offer { margin-top: 35px; }
+  .sample-layout { grid-template-columns: 1fr; gap: 27px; }
+  .sample-card { max-width: 680px; }
+}
+@media (max-width: 560px) {
+  .wrap { width: calc(100% - 36px); }
+  .header { min-height: 74px; }
+  .brand { font-size: 20px; }
+  .hero { padding-block: 43px 63px; }
+  h1 { font-size: clamp(48px, 12vw, 62px); }
+  .lead { font-size: 19px; }
+  .visual { box-shadow: 9px 11px 0 #e8e9db; }
+  .visual-preview figcaption { font-size: 17px; }
+  .offer { margin-top: 32px; }
+  .sample-section { padding-block: 65px; }
+  .sample-intro h2 { font-size: 42px; }
+  .sample-card { padding: 30px 27px; }
+  .sample-card p:not(.sample-label) { font-size: 19px; }
+  .footer { min-height: 75px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
