@@ -39,7 +39,7 @@ a { color: inherit; }
 .hero-copy { grid-area: copy; align-self: end; }
 .eyebrow { margin: 0; color: #557465; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
 h1, h2 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; letter-spacing: -.035em; }
-h1 { max-width: 600px; margin: 24px 0 26px; font-size: clamp(58px, 6vw, 82px); line-height: 1.06; }
+h1 { max-width: 600px; margin: 24px 0 26px; font-size: clamp(58px, 6vw, 74px); line-height: 1.08; }
 h1 em { color: #a77c43; font-weight: 400; }
 .lead { max-width: 540px; margin: 0; color: var(--muted); font-size: 21px; line-height: 1.6; }
 .visual-preview { grid-area: visual; min-width: 0; margin: 0; }
@@ -61,6 +61,7 @@ h1 em { color: #a77c43; font-weight: 400; }
 .sample-card p:not(.sample-label) { margin: 0; color: var(--muted); font-size: 20px; line-height: 1.7; }
 .sample-card p + p { margin-top: 24px !important; }
 .sample-card strong { color: var(--ink); }
+.verse-reference { display: block; margin-top: 3px; color: #526750; font-size: 16px; }
 .footer { min-height: 95px; display: flex; align-items: center; color: var(--muted); font-size: 15px; }
 
 @media (max-width: 850px) {
