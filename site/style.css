@@ -69,6 +69,9 @@ h1 em { color: #a77c43; font-weight: 400; }
 .sample-card p + p { margin-top: 24px !important; }
 .sample-card strong { color: var(--ink); }
 .verse-reference { display: block; margin-top: 3px; color: #526750; font-size: 16px; }
+.share-section { padding-block: 80px; }
+.share-section h2 { max-width: 760px; margin: 18px 0; font-size: clamp(34px, 3.4vw, 46px); line-height: 1.15; }
+.share-section > p:not(.eyebrow) { max-width: 620px; margin: 0 0 28px; color: var(--muted); font-size: 19px; }
 .footer { min-height: 95px; display: flex; align-items: center; color: var(--muted); font-size: 15px; }
 
 @media (max-width: 850px) {
@@ -93,6 +96,8 @@ h1 em { color: #a77c43; font-weight: 400; }
   .sample-intro h2 { font-size: 42px; }
   .sample-card { padding: 30px 27px; }
   .sample-card p:not(.sample-label) { font-size: 19px; }
+  .share-section { padding-block: 60px; }
+  .share-section h2 { font-size: 34px; }
   .footer { min-height: 75px; }
 }
 @media (prefers-reduced-motion: reduce) {
