@@ -53,6 +53,11 @@ h1 em { color: #a77c43; font-weight: 400; }
 .availability { margin: 0 0 23px; color: var(--muted); font-size: 17px; }
 .button { display: inline-flex; align-items: center; gap: 20px; padding: 16px 23px; border-radius: 5px; background: var(--green); color: white; font-size: 18px; font-weight: 700; text-decoration: none; }
 .button:hover, .button:focus-visible { background: #174b38; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.button-secondary { background: transparent; color: var(--green); box-shadow: inset 0 0 0 2px var(--green); }
+.button-secondary:hover, .button-secondary:focus-visible { background: #e8e9db; }
+.fine-print { max-width: 460px; margin: 18px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.fine-print a { color: var(--green); text-underline-offset: 3px; }
 
 .sample-section { background: var(--sage); padding-block: 85px; }
 .sample-layout { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 9%; }
