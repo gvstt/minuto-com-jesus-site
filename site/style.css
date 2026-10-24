@@ -55,14 +55,18 @@ h1 em { color: #a77c43; font-weight: 400; }
 .button:hover, .button:focus-visible { background: #174b38; }
 
 .sample-section { background: var(--sage); padding-block: 85px; }
-.sample-layout { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 9%; }
+.sample-layout { display: grid; grid-template-columns: .65fr 1.35fr; align-items: start; gap: 7%; }
 .sample-intro h2 { margin: 18px 0; font-size: clamp(40px, 4vw, 56px); line-height: 1.13; }
 .sample-intro > p:last-child { color: var(--muted); font-size: 19px; }
 .sample-card { padding: 40px 46px; border: 1px solid #e1e5d9; border-radius: 5px; background: #fffef9; box-shadow: 0 18px 55px #24483d12; }
-.sample-label { margin: 0 0 27px; color: #51715d; font-size: 14px; font-weight: 700; letter-spacing: .09em; }
-.sample-card p:not(.sample-label) { margin: 0; color: var(--muted); font-size: 20px; line-height: 1.7; }
-.sample-card p + p { margin-top: 24px !important; }
+.sample-card .sample-label { margin: 0 0 27px; color: #51715d; font-size: 14px; font-weight: 700; letter-spacing: .09em; }
+.sample-card p { margin: 0; color: var(--muted); font-size: 20px; line-height: 1.7; }
+.sample-card p + p { margin-top: 24px; }
 .sample-card strong { color: var(--ink); }
+.sample-card .sample-closing { color: var(--green); font-family: "DM Serif Display", Georgia, serif; font-size: 26px; }
+.sample-card .sample-signature { margin-top: 8px; font-size: 16px; }
+.sample-card .sample-source { padding-top: 20px; border-top: 1px solid #e1e5d9; font-size: 14px; line-height: 1.6; }
+.sample-source a { text-underline-offset: 3px; }
 .verse-reference { display: block; margin-top: 3px; color: #526750; font-size: 16px; }
 .footer { min-height: 95px; display: flex; align-items: center; color: var(--muted); font-size: 15px; }
 
@@ -87,7 +91,7 @@ h1 em { color: #a77c43; font-weight: 400; }
   .sample-section { padding-block: 65px; }
   .sample-intro h2 { font-size: 42px; }
   .sample-card { padding: 30px 27px; }
-  .sample-card p:not(.sample-label) { font-size: 19px; }
+  .sample-card p { font-size: 19px; }
   .footer { min-height: 75px; }
 }
 @media (prefers-reduced-motion: reduce) {
