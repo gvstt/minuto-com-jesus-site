@@ -100,7 +100,9 @@ class PublicReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(check.InvalidRelease,'unreviewed_page_content'):check.validate(self.site)
 
     def test_scripts_iframes_forms_and_event_handlers_require_review(self):
-        for injected in ['<script src="x.js"></script>','<iframe src="https://tracking.example"></iframe>','<form></form>','<img src="x" alt="x" onerror="x()">']:
+        for injected in ['<script src="x.js"></script>','<iframe src="https://tracking.example"></iframe>','<form></form>','<img src="x" alt="x" onerror="x()">',
+                         '<meta http-equiv="refresh" content="0;url=https://tracking.example">','<video src="https://tracking.example"></video>',
+                         '<a href="#exemplo" ping="https://tracking.example">x</a>']:
             shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
             self.edit('index.html','</body>',injected+'</body>')
             with self.assertRaises(check.InvalidRelease):check.validate(self.site)
@@ -113,8 +115,10 @@ class PublicReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(check.InvalidRelease,'image_alt_missing'):check.validate(self.site)
 
     def test_unreviewed_file_cannot_be_uploaded_with_the_site(self):
-        (self.site/'database.sql').write_text('private')
-        with self.assertRaisesRegex(check.InvalidRelease,'unreviewed_site_file'):check.validate(self.site)
+        for name in ['database.sql','assets/release.json']:
+            (self.site/name).write_text('private')
+            with self.assertRaisesRegex(check.InvalidRelease,'unreviewed_site_file'):check.validate(self.site)
+            (self.site/name).unlink()
 
 
 if __name__=='__main__':unittest.main()
