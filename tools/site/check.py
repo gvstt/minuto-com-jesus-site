@@ -28,7 +28,7 @@ def require(condition, code):
 class Page(HTMLParser):
     def __init__(self, text):
         super().__init__(convert_charrefs=True)
-        self.ids, self.links, self.resources, self.text, self.meta = set(), [], [], [], {}
+        self.ids, self.links, self.resources, self.text, self.meta, self.styles = set(), [], [], [], {}, []
         self.lang = None
         self.blocked = False
         self.in_style = False
@@ -42,7 +42,8 @@ class Page(HTMLParser):
             self.ids.add(a['id'])
         if tag=='html': self.lang=a.get('lang')
         if tag=='style':self.in_style=True
-        if tag in ('script','iframe','object','embed','form','base') or any(k.startswith('on') for k in a): self.blocked=True
+        if tag in ('script','iframe','object','embed','form','base','video','audio','source','track','picture','svg','math') or any(k.startswith('on') for k in a): self.blocked=True
+        if any(k in a for k in ('http-equiv','background','srcdoc','ping','poster','formaction')) or tag!='img' and 'src' in a:self.blocked=True
         if tag=='a': self.links.append(a.get('href',''))
         if tag=='link':
             require(a.get('rel')=='stylesheet', 'unreviewed_resource')
@@ -54,7 +55,8 @@ class Page(HTMLParser):
         if tag=='meta': self.meta[a.get('property') or a.get('name')]=a.get('content')
 
     def handle_data(self, text):
-        if not self.in_style:self.text.append(text)
+        if self.in_style:self.styles.append(text)
+        else:self.text.append(text)
 
     def handle_endtag(self, tag):
         if tag=='style':self.in_style=False
@@ -98,7 +100,7 @@ def validate(site):
         and type(policy['opening_authorized']) is bool and policy['opening_authorized']==(policy['availability']=='open'), 'opening_not_authorized')
     require(type(policy['price_cents']) is int and policy['price_cents']==990 and policy['currency']=='BRL' and policy['recurrence']=='monthly'
         and policy['backend_origin']==BACKEND and type(policy['public_customer_limit']) is int and 25<policy['public_customer_limit']<=10000, 'commercial_offer_mismatch')
-    actual=sorted(str(p.relative_to(site)) for p in site.rglob('*') if p.is_file() and p.name!='release.json')
+    actual=sorted(str(p.relative_to(site)) for p in site.rglob('*') if p.is_file() and p!=site/'release.json')
     require(actual==policy['inventory'] and all(not p.startswith('.') and '/.' not in p for p in actual), 'unreviewed_site_file')
     docs=policy['documents']
     require(isinstance(docs,dict) and set(docs)=={'version','sha256'} and re.fullmatch(r'commercial-\d{4}-\d{2}-\d{2}-v[1-9]\d*',docs['version']), 'document_version_invalid')
@@ -110,10 +112,10 @@ def validate(site):
     require(set(pages)=={'index.html','termos.html','privacidade.html'}, 'unreviewed_page')
     for name,page in pages.items():
         source=(site/name).read_text()
-        require(page.lang=='pt-BR' and not page.blocked and not PLACEHOLDERS.search(' '.join(page.text)), 'unreviewed_page_content')
+        require(page.lang=='pt-BR' and not page.blocked and not PLACEHOLDERS.search(source), 'unreviewed_page_content')
         for value in page.links:local_target(site,name,value)
         for value in page.resources:local_target(site,name,value,resource=True)
-        require(not re.search(r'@import|image-set\(',source,re.I), 'unreviewed_resource')
+        require(not re.search(r'@import|image-set\(|https?:|//|\\', ''.join(page.styles),re.I), 'unreviewed_resource')
         for url in re.findall(r'url\(\s*[\'"]?([^\s\)\'";]+)',source):local_target(site,name,url,resource=True)
         for price in re.findall(r'R\$\s*([0-9]+(?:[.,][0-9]{2})?)',' '.join(page.text)):
             require(price.replace('.',',')=='9,90', 'displayed_price_mismatch')
@@ -135,7 +137,7 @@ def validate(site):
     for path in sorted(site.rglob('*')):
         require(not path.is_symlink(), 'symlink_in_site')
         if path.suffix=='.css':
-            require(not re.search(r'@import|image-set\(',path.read_text(),re.I), 'unreviewed_resource')
+            require(not re.search(r'@import|image-set\(|https?:|//|\\',path.read_text(),re.I), 'unreviewed_resource')
             for url in re.findall(r'url\(\s*[\'"]?([^\s\)\'";]+)',path.read_text()):local_target(site,path.relative_to(site),url,resource=True)
         require(path.suffix not in ('.js','.map','.sql','.env'), 'unreviewed_asset')
     return {'status':'verified','scope':'static_public_release','availability':policy['availability'],'price_cents':990,
