@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "availability": "coming_soon",
+  "opening_authorized": false,
+  "price_cents": 990,
+  "currency": "BRL",
+  "recurrence": "monthly",
+  "backend_origin": "https://assinar.minutocomjesus.com.br",
+  "documents": {
+    "version": "commercial-2026-10-14-v4",
+    "sha256": {
+      "termos.html": "2dab47c2da081a1b85066fb6f545a4269f5d7b02ae3fcefb8d78a0789509e3df",
+      "privacidade.html": "b1eea54e127c38f1bcacfe117232012d31c086be90fd59f3b0453b53ccff1318",
+      "contratos/commercial-2026-10-14-v4.txt": "79bb018f9130d562a4e11ecad1c28f669dfc2c0fd8a8e9528bc814c231562a37"
+    }
+  },
+  "sample": {
+    "image_path": "assets/bom-dia-exemplo-tiago-4-8.jpg",
+    "image_sha256": "1ed54468353bb537bdee4df6792c548464d673e445e5a354b7c84b6269e729d2",
+    "markup_sha256": "40bf57668b3fed667f8185d691fa2455d502ab42fac251f19c97dc7b4a8c8876",
+    "reference": "Tiago 4:8"
+  },
+  "public_customer_limit": 1000,
+  "inventory": [
+    "assets/bom-dia-exemplo-filipenses-4-11.jpg",
+    "assets/bom-dia-exemplo-tiago-4-8.jpg",
+    "assets/bom-dia-exemplo.jpg",
+    "assets/fonts/OFL-DM-Sans.txt",
+    "assets/fonts/OFL-DM-Serif-Display.txt",
+    "assets/fonts/dm-sans-latin-wght-normal.woff2",
+    "assets/fonts/dm-serif-display-latin-400-italic.woff2",
+    "assets/fonts/dm-serif-display-latin-400-normal.woff2",
+    "contratos/commercial-2026-10-14-v4.txt",
+    "index.html",
+    "privacidade.html",
+    "style.css",
+    "termos.html"
+  ]
+}
