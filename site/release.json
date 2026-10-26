@@ -7,11 +7,11 @@
   "recurrence": "monthly",
   "backend_origin": "https://assinar.minutocomjesus.com.br",
   "documents": {
-    "version": "commercial-2026-10-14-v4",
+    "version": "commercial-2026-10-26-v5",
     "sha256": {
-      "termos.html": "4fcf0e1c236a0050feba1c85f471502683999f52b912bdf31dfa3eedb100477d",
-      "privacidade.html": "1c958f9c1abac599bc48ab2b92b1d12e3a04b1198fc5054ad8e28799389bc00a",
-      "contratos/commercial-2026-10-14-v4.txt": "79bb018f9130d562a4e11ecad1c28f669dfc2c0fd8a8e9528bc814c231562a37"
+      "termos.html": "cfe21d5c90f3d283a112365f514f972d8a86242709a657a2c37cff224035111f",
+      "privacidade.html": "eb951b7c4dcb807b51f00c50d84a93de0e58fc5d09a71c43a5b159de828b074c",
+      "contratos/commercial-2026-10-26-v5.txt": "15a841b68920665abea2d494b335a2de3868b4b23f1cc164573890893bf7d5b1"
     }
   },
   "sample": {
@@ -30,7 +30,7 @@
     "assets/fonts/dm-sans-latin-wght-normal.woff2",
     "assets/fonts/dm-serif-display-latin-400-italic.woff2",
     "assets/fonts/dm-serif-display-latin-400-normal.woff2",
-    "contratos/commercial-2026-10-14-v4.txt",
+    "contratos/commercial-2026-10-26-v5.txt",
     "index.html",
     "privacidade.html",
     "style.css",
