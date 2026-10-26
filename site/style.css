@@ -39,7 +39,7 @@ a { color: inherit; }
   padding-block: 70px 85px;
 }
 .hero-copy { grid-area: copy; align-self: end; }
-.eyebrow { margin: 0; color: #557465; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
+.eyebrow { margin: 0; color: #4a6858; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
 h1, h2 { font-family: "DM Serif Display", Georgia, serif; font-weight: 400; letter-spacing: -.035em; }
 h1 { max-width: 600px; margin: 24px 0 26px; font-size: clamp(58px, 6vw, 74px); line-height: 1.08; }
 h1 em { color: #a77c43; font-weight: 400; }
