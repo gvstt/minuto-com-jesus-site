@@ -71,7 +71,7 @@ class PublicReleaseTests(unittest.TestCase):
         self.edit('termos.html','R$ 9,90','R$ 10,90')
         with self.assertRaisesRegex(check.InvalidRelease,'document_hash'):check.validate(self.site)
         shutil.copyfile(check.ROOT/'site/termos.html',self.site/'termos.html')
-        p=self.site/'contratos/commercial-2026-10-14-v4.txt';p.write_text(p.read_text()+'changed')
+        p=self.site/'contratos/commercial-2026-10-26-v5.txt';p.write_text(p.read_text()+'changed')
         with self.assertRaisesRegex(check.InvalidRelease,'document_hash'):check.validate(self.site)
 
     def test_missing_local_asset_and_broken_fragment_are_blocked(self):
