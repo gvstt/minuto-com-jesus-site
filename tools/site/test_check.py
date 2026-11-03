@@ -47,6 +47,14 @@ class PublicReleaseTests(unittest.TestCase):
             with self.assertRaises(check.InvalidRelease):check.verify_backend(r,lambda:h)
         self.assertTrue(check.verify_backend(r,lambda:self.health(signups_enabled=True,customer_limit=1000))['backend_checked'])
 
+    def test_initial_group_of_25_keeps_the_landing_page_in_coming_soon(self):
+        # N03: grupo inicial com inscrições ligadas e limite 25 não publica CTA, mas o site continua publicável.
+        r=check.validate(self.site)
+        self.assertTrue(check.verify_backend(r,lambda:self.health(signups_enabled=True,customer_limit=25))['backend_checked'])
+        for limit in (24,26,100):
+            with self.subTest(limit=limit):
+                with self.assertRaises(check.InvalidRelease):check.verify_backend(r,lambda:self.health(signups_enabled=True,customer_limit=limit))
+
     def test_hidden_single_participant_trial_is_compatible_with_coming_soon(self):
         r=check.validate(self.site)
         self.assertTrue(check.verify_backend(r,lambda:self.health(signups_enabled=True,customer_limit=1))['backend_checked'])

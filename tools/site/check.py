@@ -11,6 +11,7 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 ROOT = Path(__file__).resolve().parents[2]
 ORIGIN = 'https://minutocomjesus.com.br'
 BACKEND = 'https://assinar.minutocomjesus.com.br'
+INITIAL_GROUP_LIMIT = 25  # igual a src/production_phase.py no repositório privado
 PLACEHOLDERS = re.compile(r'\{\{[^{}]{0,200}\}\}|\b(?:TODO|PLACEHOLDER|SEUSUBDOMINIO|SEU_CPF|SEU_NOME|SEU_ENDERECO)\b')
 EXTERNAL_LINK_HOSTS = {'github.com','creativecommons.org','resend.com','www.cloudflare.com','workspace.google.com','docs.github.com','www.mercadopago.com.br','assinar.minutocomjesus.com.br'}
 sha256 = lambda data: hashlib.sha256(data).hexdigest()
@@ -161,9 +162,10 @@ def verify_backend(report, read=None):
         and type(health.get('signups_enabled')) is bool and type(health.get('customer_limit')) is int
         and 1<=health['customer_limit']<=10000 and set(health).issubset({'ok','mode','signups_enabled','customer_limit','admissions_paused'}), 'backend_health_invalid')
     require('admissions_paused' not in health or health['admissions_paused'] is True and health['signups_enabled'] is False, 'backend_health_invalid')
-    # A hidden one-person trial is compatible with a public coming-soon page.
+    # A hidden one-person trial and the invitation-only initial group (N03, 03/11/2026) keep the public page
+    # in coming-soon: the initial group's signup link is shared directly, never published on the landing page.
     compatible=health['signups_enabled'] and health['customer_limit']==report['public_customer_limit']
-    if report['availability']=='coming_soon':compatible=not health['signups_enabled'] or health['customer_limit']==1
+    if report['availability']=='coming_soon':compatible=not health['signups_enabled'] or health['customer_limit'] in (1,INITIAL_GROUP_LIMIT)
     require(compatible,'site_backend_availability_mismatch')
     return {**report,'backend_checked':True,'backend_health':health}
 
