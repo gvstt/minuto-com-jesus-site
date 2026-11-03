@@ -7,9 +7,38 @@ import check
 
 
 class PublicReleaseTests(unittest.TestCase):
+    OPEN_OFFER=('''        <p class="availability">Uma mensagem por dia no seu e-mail. Cancele a renovação quando quiser, sem taxa.</p>
+        <div class="actions">
+          <a class="button" href="https://assinar.minutocomjesus.com.br/cadastro">Assinar agora <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="#exemplo">Ver um exemplo <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="fine-print">Pagamento recorrente pelo Mercado Pago. Antes de assinar, leia os <a href="termos.html">Termos da assinatura</a> e a <a href="privacidade.html">Política de privacidade</a>.</p>
+''','''        <p class="availability">As assinaturas estarão disponíveis em breve.</p>
+        <a class="button" href="#exemplo">Ver um exemplo <span aria-hidden="true">↓</span></a>
+''')
+
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.site=Path(self.tmp.name)/'site';shutil.copytree(check.ROOT/'site',self.site)
+        # The scenarios below start from the reviewed coming-soon page. When the shipped page is the
+        # opening package, convert the copy back to that baseline; the shipped state has its own test.
+        if json.loads((self.site/'release.json').read_text())['availability']=='open':
+            self.policy(lambda p:p.update(availability='coming_soon',opening_authorized=False))
+        self.reset_index()
+
+    def reset_index(self):
+        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        if self.OPEN_OFFER[0] in (self.site/'index.html').read_text():
+            self.edit('index.html',*self.OPEN_OFFER);self.edit('index.html','./style.css?v=20261025','./style.css?v=20261024')
+
+    def test_shipped_release_matches_its_own_backend_phase(self):
+        r=check.validate(check.ROOT/'site')
+        if r['availability']=='open':
+            for h in [self.health(),self.health(signups_enabled=True,customer_limit=25)]:
+                with self.assertRaises(check.InvalidRelease):check.verify_backend(r,lambda:h)
+            self.assertTrue(check.verify_backend(r,lambda:self.health(signups_enabled=True,customer_limit=r['public_customer_limit']))['backend_checked'])
+        else:
+            self.assertTrue(check.verify_backend(r,lambda:self.health())['backend_checked'])
 
     def edit(self,path,old,new):
         file=self.site/path;text=file.read_text();self.assertIn(old,text);file.write_text(text.replace(old,new))
@@ -60,10 +89,10 @@ class PublicReleaseTests(unittest.TestCase):
     def test_sample_text_image_and_open_graph_remain_coherent(self):
         self.edit('index.html','og:image" content="https://minutocomjesus.com.br/assets/bom-dia-exemplo-tiago-4-8.jpg','og:image" content="https://minutocomjesus.com.br/assets/bom-dia-exemplo.jpg')
         with self.assertRaises(check.InvalidRelease):check.validate(self.site)
-        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        self.reset_index()
         self.edit('index.html','Tiago nos convida','Outro texto convida')
         with self.assertRaisesRegex(check.InvalidRelease,'sample_changed'):check.validate(self.site)
-        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        self.reset_index()
         (self.site/'assets/bom-dia-exemplo-tiago-4-8.jpg').write_bytes(b'changed')
         with self.assertRaisesRegex(check.InvalidRelease,'sample_changed'):check.validate(self.site)
 
@@ -77,20 +106,20 @@ class PublicReleaseTests(unittest.TestCase):
     def test_missing_local_asset_and_broken_fragment_are_blocked(self):
         self.edit('index.html','./style.css?v=20261024','./absent.css')
         with self.assertRaisesRegex(check.InvalidRelease,'missing_or_unsafe_asset'):check.validate(self.site)
-        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        self.reset_index()
         self.edit('index.html','href="#exemplo"','href="#missing"')
         with self.assertRaisesRegex(check.InvalidRelease,'broken_fragment'):check.validate(self.site)
 
     def test_remote_tracking_resource_and_css_import_are_blocked(self):
         self.edit('index.html','./style.css?v=20261024','https://tracking.example/style.css')
         with self.assertRaises(check.InvalidRelease):check.validate(self.site)
-        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        self.reset_index()
         p=self.site/'style.css';p.write_text(p.read_text()+'\n@import "https://tracking.example/";')
         with self.assertRaisesRegex(check.InvalidRelease,'unreviewed_resource'):check.validate(self.site)
 
     def test_path_traversal_and_javascript_link_are_rejected(self):
         for value in ['../README.md','%2e%2e/README.md','javascript:alert(1)','//tracking.example/x']:
-            shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+            self.reset_index()
             self.edit('index.html','href="#exemplo"',f'href="{value}"')
             with self.assertRaises(check.InvalidRelease):check.validate(self.site)
 
@@ -103,14 +132,14 @@ class PublicReleaseTests(unittest.TestCase):
         for injected in ['<script src="x.js"></script>','<iframe src="https://tracking.example"></iframe>','<form></form>','<img src="x" alt="x" onerror="x()">',
                          '<meta http-equiv="refresh" content="0;url=https://tracking.example">','<video src="https://tracking.example"></video>',
                          '<a href="#exemplo" ping="https://tracking.example">x</a>']:
-            shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+            self.reset_index()
             self.edit('index.html','</body>',injected+'</body>')
             with self.assertRaises(check.InvalidRelease):check.validate(self.site)
 
     def test_duplicate_ids_and_image_without_alt_are_blocked(self):
         self.edit('index.html','id="inicio"','id="conteudo"')
         with self.assertRaisesRegex(check.InvalidRelease,'duplicate_html_id'):check.validate(self.site)
-        shutil.copyfile(check.ROOT/'site/index.html',self.site/'index.html')
+        self.reset_index()
         self.edit('index.html','alt="Card','data-description="Card')
         with self.assertRaisesRegex(check.InvalidRelease,'image_alt_missing'):check.validate(self.site)
 
