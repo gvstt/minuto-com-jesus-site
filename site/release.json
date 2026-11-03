@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "availability": "coming_soon",
-  "opening_authorized": false,
+  "availability": "open",
+  "opening_authorized": true,
   "price_cents": 990,
   "currency": "BRL",
   "recurrence": "monthly",
